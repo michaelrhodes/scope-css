@@ -6,7 +6,12 @@ function scope (css, parent) {
 
 	if (!parent) return css;
 
-	css = replace(css, parent + ' $1$2');
+  //replace with respect for any leading whitespace
+	css = replace(css, function (m, $1, $2) {
+		var leading = $1.match(/^\s*/)[0];
+		$1 = $1.slice(leading.length);
+		return leading + parent + ' ' + $1 + $2;
+	});
 
 	//regexp.escape
 	let parentRe = parent.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
